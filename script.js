@@ -10,11 +10,14 @@ let quoteIndex = 0;
 
 function updateQuote() {
     const quoteDisplay = document.getElementById('weatherQuote');
-    quoteDisplay.innerText = weatherQuotes[quoteIndex];
-    quoteIndex = (quoteIndex + 1) % weatherQuotes.length;
+    if (quoteDisplay) {
+        quoteDisplay.innerText = weatherQuotes[quoteIndex];
+        quoteIndex = (quoteIndex + 1) % weatherQuotes.length;
+    }
 }
 
 setInterval(updateQuote, 5000); // Change quote every 5 seconds
+updateQuote(); // Start quote rotation immediately
 
 async function getWeather() {
     const location = document.getElementById('locationInput').value.trim();
@@ -24,7 +27,7 @@ async function getWeather() {
     }
 
     const apiKey = '5581d1691022455d8d5172459251706';
-    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`; // Fixed HTTPS
 
     try {
         const response = await fetch(url);
@@ -41,18 +44,18 @@ async function getWeather() {
 
 function displayWeather(data) {
     const weatherIcon = document.getElementById('weatherIcon');
-    weatherIcon.src = "https:" + data.current.condition.icon;
-    weatherIcon.style.display = 'block';
-
     const forecastDiv = document.getElementById('forecast');
-    forecastDiv.innerHTML = `
-        <p><strong>Location:</strong> ${data.location.name}, ${data.location.region}</p>
-        <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
-        <p><strong>Condition:</strong> ${data.current.condition.text}</p>
-        <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
-        <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
-    `;
-}
 
-// Start quote rotation immediately
-updateQuote();
+    if (weatherIcon && forecastDiv) {
+        weatherIcon.src = "https:" + data.current.condition.icon;
+        weatherIcon.style.display = 'block';
+
+        forecastDiv.innerHTML = `
+            <p><strong>Location:</strong> ${data.location.name}, ${data.location.region}</p>
+            <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
+            <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+            <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+            <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
+        `;
+    }
+}
