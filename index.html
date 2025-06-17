@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="weather-container">
+        <h1>Weather Prediction App</h1>
+        <div class="input-group">
+            <input type="text" id="locationInput" placeholder="Enter Location">
+            <button onclick="getWeather()">Get Weather</button>
+        </div>
+
+        <div class="weather-display">
+            <img id="weatherIcon" src="" alt="Weather Icon" style="display:none;">
+            <h2 id="forecastTitle">Hourly Forecast</h2>
+            <div id="forecast"></div>
+        </div>
+
+        <p class="quote" id="weatherQuote">Some people feel the rain. Others just get wet.</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
