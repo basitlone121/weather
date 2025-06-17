@@ -10,14 +10,16 @@ let quoteIndex = 0;
 
 function updateQuote() {
     const quoteDisplay = document.getElementById('weatherQuote');
-    if (quoteDisplay) {
+    quoteDisplay.style.opacity = 0;
+
+    setTimeout(() => {
         quoteDisplay.innerText = weatherQuotes[quoteIndex];
+        quoteDisplay.style.opacity = 1;
         quoteIndex = (quoteIndex + 1) % weatherQuotes.length;
-    }
+    }, 500);
 }
 
-setInterval(updateQuote, 5000); // Change quote every 5 seconds
-updateQuote(); // Start quote rotation immediately
+setInterval(updateQuote, 5000);
 
 async function getWeather() {
     const location = document.getElementById('locationInput').value.trim();
@@ -27,7 +29,7 @@ async function getWeather() {
     }
 
     const apiKey = '5581d1691022455d8d5172459251706';
-    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`; // Fixed HTTPS
+    const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
 
     try {
         const response = await fetch(url);
@@ -44,18 +46,19 @@ async function getWeather() {
 
 function displayWeather(data) {
     const weatherIcon = document.getElementById('weatherIcon');
+    weatherIcon.src = "https:" + data.current.condition.icon;
+    weatherIcon.style.display = 'block';
+
     const forecastDiv = document.getElementById('forecast');
-
-    if (weatherIcon && forecastDiv) {
-        weatherIcon.src = "https:" + data.current.condition.icon;
-        weatherIcon.style.display = 'block';
-
-        forecastDiv.innerHTML = `
-            <p><strong>Location:</strong> ${data.location.name}, ${data.location.region}</p>
-            <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
-            <p><strong>Condition:</strong> ${data.current.condition.text}</p>
-            <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
-            <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
-        `;
-    }
+    forecastDiv.innerHTML = `
+        <h2>Hourly Forecast</h2>
+        <p><strong>Location:</strong> ${data.location.name}, ${data.location.region}</p>
+        <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
+        <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+        <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+        <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
+    `;
 }
+
+// Start quote rotation immediately
+updateQuote();
